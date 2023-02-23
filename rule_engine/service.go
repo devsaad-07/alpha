@@ -31,24 +31,24 @@ type RuleConfig interface {
 type RuleEngineSvc struct {
 }
 
-func NewRuleEngineSvc() *RuleEngineSvc {
+func NewRuleEngineSvc(ruleType string) *RuleEngineSvc {
 	// you could add your cloud provider here instead of keeping rule file in your code.
-	buildRuleEngine()
+	buildRuleEngine(ruleType)
 	return &RuleEngineSvc{}
 }
 
-func buildRuleEngine() {
+func buildRuleEngine(ruleType string) {
 	ruleBuilder := builder.NewRuleBuilder(&knowledgeLibrary)
 
 	// Read rule from file and build rules
 	dir, err := os.Getwd()
-	path := filepath.Join(dir, "/rule_engine/fee.grl")
+	path := "/rule_engine/rules/" + ruleType + ".grl"
+	path = filepath.Join(dir, path)
 	ruleFile := pkg.NewFileResource(path)
 	err = ruleBuilder.BuildRuleFromResource("Rules", "0.0.1", ruleFile)
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func (svc *RuleEngineSvc) Execute(ruleConf RuleConfig) error {

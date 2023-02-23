@@ -8,14 +8,17 @@ import (
 )
 
 type Alpha struct {
-	rule_engine *rule_engine.RuleEngineSvc
+	rule_engine_map map[string]*rule_engine.RuleEngineSvc
 }
 
 var alpha Alpha
 
 func init() {
+	ruleEngineMap := map[string]*rule_engine.RuleEngineSvc{
+		"fee": rule_engine.NewRuleEngineSvc("fee"),
+	}
 	alpha = Alpha{
-		rule_engine: rule_engine.NewRuleEngineSvc(),
+		rule_engine_map: ruleEngineMap,
 	}
 }
 
@@ -26,7 +29,7 @@ func ping(c *gin.Context) {
 }
 
 func HandleFee(c *gin.Context) {
-	ruleEngineSvc := alpha.rule_engine
+	ruleEngineSvc := alpha.rule_engine_map["fee"]
 	feeService := rule_engine.NewFeeService(ruleEngineSvc)
 
 	var feeCard rule_engine.FeeRequest
