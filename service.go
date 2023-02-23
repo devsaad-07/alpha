@@ -39,7 +39,7 @@ func buildRuleEngine() {
 	ruleBuilder := builder.NewRuleBuilder(&knowledgeLibrary)
 
 	// Read rule from file and build rules
-	ruleFile := pkg.NewFileResource("rules.grl")
+	ruleFile := pkg.NewFileResource("fee.grl")
 	err := ruleBuilder.BuildRuleFromResource("Rules", "0.0.1", ruleFile)
 	if err != nil {
 		panic(err)
