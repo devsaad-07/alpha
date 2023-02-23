@@ -2,11 +2,12 @@ package db
 
 import (
 	"fmt"
+	"sync"
+	"time"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"sync"
-	"time"
 )
 
 var (
@@ -17,7 +18,7 @@ var (
 func init() {
 	var err error
 	singleton.Do(func() {
-		dsn := fmt.Sprintf("host=127.0.0.1 user=postgres password=postgres dbname=cs_india port=5432 sslmode=disable")
+		dsn := "host=127.0.0.1 user=postgres password=postgres dbname=cs_india port=5432 sslmode=disable"
 		PostgresDB, err = gorm.Open(postgres.New(postgres.Config{
 			DSN: dsn,
 		}), &gorm.Config{

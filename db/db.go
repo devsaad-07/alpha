@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -56,4 +57,17 @@ func SaveRule(rule Rules) (err error) {
 	db := GetDb()
 	tx := db.Create(&rule)
 	return tx.Error
+}
+
+func UpdateRuleStatus(id int, status bool) {
+	var rule Rules
+
+	db := GetDb()
+	tx := db.Where("id = ?", id).Find(&rule)
+	if tx.Error != nil {
+		return
+	}
+	rule.IsActive = status
+
+	SaveRule(rule)
 }

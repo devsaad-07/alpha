@@ -1,10 +1,13 @@
 package communication
 
 import (
+	"alpha/db"
 	feeDiscount "alpha/db"
 	"alpha/rule_engine"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Alpha struct {
@@ -67,4 +70,13 @@ func HandleAddRule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"payload": "Rule Added",
 	})
+}
+
+func DeleteRule(c *gin.Context) {
+	queryMap := c.Request.URL.Query()
+	id, _ := strconv.Atoi(queryMap["id"][0])
+	// Remove rule from builder
+
+	// Mark rule as in_active on builder
+	db.UpdateRuleStatus(id, false)
 }
