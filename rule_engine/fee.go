@@ -31,12 +31,8 @@ type FeeInput struct {
 	AssetPair             string    `json:"assetPair"`
 	OrderSource           string    `json:"orderSource"` // client calling this ex: CSK, CS Pro
 	UserId                int64     `json:"userId"`
-	TradeVolumeInr        float64   `json:"tradeVolumeInr"`
-	TradeRequestAmountINR float64   `json:"tradeRequestAmountINR"`
-	UserCreatedAt         time.Time `json:"userCreatedAt"`
-	UserLastLogin         time.Time `json:"userLastLogin"`
-	UserLastTradeTime     time.Time `json:"userLastTradeTime"`
 	UserDOB               time.Time `json:"userDOB"`
+	TradeRequestAmountINR float64   `json:"tradeRequestAmountINR"`
 	TradeExchange         string    `json:"tradeExchange"`
 	TradeType             string    `json:"tradeType"`
 	OrderType             string    `json:"orderType"` // INSTANT, LIMIT, MARKET etc
@@ -78,9 +74,6 @@ type FeeRequest struct {
 	UserId                int64     `json:"userId"`
 	TradeVolumeInr        float64   `json:"tradeVolumeInr"`
 	TradeRequestAmountINR float64   `json:"tradeRequestAmountINR"`
-	UserCreatedAt         time.Time `json:"userCreatedAt"`
-	UserLastLogin         time.Time `json:"userLastLogin"`
-	UserLastTradeTime     time.Time `json:"userLastTradeTime"`
 	UserDOB               time.Time `json:"userDOB"`
 	TradeExchange         string    `json:"tradeExchange"`
 	TradeType             string    `json:"tradeType"`
@@ -110,11 +103,7 @@ func (svc FeeServiceClient) GetFeeForUser(feeRequest FeeRequest) (feeResponse Fe
 		AssetPair:             feeRequest.AssetPair,
 		OrderSource:           feeRequest.OrderSource,
 		UserId:                feeRequest.UserId,
-		TradeVolumeInr:        feeRequest.TradeVolumeInr,
 		TradeRequestAmountINR: feeRequest.TradeRequestAmountINR,
-		UserCreatedAt:         feeRequest.UserCreatedAt,
-		UserLastLogin:         feeRequest.UserLastLogin,
-		UserLastTradeTime:     feeRequest.UserLastTradeTime,
 		UserDOB:               feeRequest.UserDOB,
 		TradeExchange:         feeRequest.TradeExchange,
 		TradeType:             feeRequest.TradeType,
