@@ -9,6 +9,7 @@ func addEndpoints(server *gin.Engine) *gin.RouterGroup {
 	s := server.Group("api/v1")
 	s.GET("/ping", ping)
 	s.POST("/fee", HandleFee)
+	s.POST("/fee/add-rule", HandleAddRule)
 	return s
 }
 

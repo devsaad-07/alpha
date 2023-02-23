@@ -120,7 +120,6 @@ func (svc FeeServiceClient) GetFeeForUser(feeRequest FeeRequest) (feeResponse Fe
 		HopType:               feeRequest.HopType,
 		Occasion:              feeRequest.Occasion,
 	}
-
 	err := svc.ruleEngineSvc.Execute(feeCard)
 	if err != nil {
 		logger.Log.Error("get user fee rule engine failed", err)
