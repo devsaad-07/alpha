@@ -5,3 +5,11 @@ rule CheckOffer "Check if offer can be applied for user" salience 10 {
         OutputData.IsOfferApplicable = true;
         Retract("CheckOffer");
 }
+
+rule CheckElig "Check if user is eligible" salience 10 {
+    when
+        InputData.Age >=20 && InputData.Age<=50
+    then
+        OutputData.IsOfferApplicable;
+        Retract("CheckElig");
+}

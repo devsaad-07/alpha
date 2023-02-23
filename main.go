@@ -1,7 +1,9 @@
 package main
 
 import (
+	"alpha/communication"
 	"fmt"
+
 	"github.com/hyperjumptech/grule-rule-engine/logger"
 )
 
@@ -49,6 +51,11 @@ func (svc OfferServiceClient) CheckOfferForUser(user User) bool {
 	}
 
 	return offerCard.UserOfferOutput.IsOfferApplicable
+}
+
+func init() {
+	server := communication.GetServer()
+	server.Run()
 }
 
 func main() {
