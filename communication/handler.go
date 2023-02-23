@@ -1,6 +1,7 @@
 package communication
 
 import (
+	feediscount "alpha/feeDiscount"
 	"alpha/rule_engine"
 	"net/http"
 
@@ -35,6 +36,8 @@ func HandleFee(c *gin.Context) {
 			"error": err.Error(),
 		})
 	}
+
+	feeCard.UserMetrics = feediscount.GetUser(feeCard.UserId)
 
 	feeCardResponse := feeService.GetFeeForUser(feeCard)
 	c.JSON(http.StatusOK, gin.H{

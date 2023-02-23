@@ -1,8 +1,10 @@
 package rule_engine
 
 import (
-	"github.com/hyperjumptech/grule-rule-engine/logger"
+	feediscount "alpha/feeDiscount"
 	"time"
+
+	"github.com/hyperjumptech/grule-rule-engine/logger"
 )
 
 type FeeContext struct {
@@ -24,12 +26,12 @@ func (uoc *FeeContext) RuleOutput() RuleOutput {
 
 // User data attributes
 type FeeInput struct {
+	UserMetrics           feediscount.UserMetrics
 	AssetType             string    `json:"assetType"`
 	AssetPair             string    `json:"assetPair"`
 	OrderSource           string    `json:"orderSource"` // client calling this ex: CSK, CS Pro
 	UserId                int64     `json:"userId"`
 	TradeVolumeInr        float64   `json:"tradeVolumeInr"`
-	TradeCount            int64     `json:"tradeCount"`
 	TradeRequestAmountINR float64   `json:"tradeRequestAmountINR"`
 	UserCreatedAt         time.Time `json:"userCreatedAt"`
 	UserLastLogin         time.Time `json:"userLastLogin"`
@@ -69,12 +71,12 @@ func NewFeeService(ruleEngineSvc *RuleEngineSvc) FeeService {
 }
 
 type FeeRequest struct {
+	UserMetrics           feediscount.UserMetrics
 	AssetType             string    `json:"assetType"`
 	AssetPair             string    `json:"assetPair"`
 	OrderSource           string    `json:"orderSource"` // client calling this ex: CSK, CS Pro
 	UserId                int64     `json:"userId"`
 	TradeVolumeInr        float64   `json:"tradeVolumeInr"`
-	TradeCount            int64     `json:"tradeCount"`
 	TradeRequestAmountINR float64   `json:"tradeRequestAmountINR"`
 	UserCreatedAt         time.Time `json:"userCreatedAt"`
 	UserLastLogin         time.Time `json:"userLastLogin"`
@@ -103,12 +105,12 @@ type FeeServiceClient struct {
 func (svc FeeServiceClient) GetFeeForUser(feeRequest FeeRequest) (feeResponse FeeResponse) {
 	feeCard := NewFeeContext()
 	feeCard.FeeInput = &FeeInput{
+		UserMetrics:           feeRequest.UserMetrics,
 		AssetType:             feeRequest.AssetType,
 		AssetPair:             feeRequest.AssetPair,
 		OrderSource:           feeRequest.OrderSource,
 		UserId:                feeRequest.UserId,
 		TradeVolumeInr:        feeRequest.TradeVolumeInr,
-		TradeCount:            feeRequest.TradeCount,
 		TradeRequestAmountINR: feeRequest.TradeRequestAmountINR,
 		UserCreatedAt:         feeRequest.UserCreatedAt,
 		UserLastLogin:         feeRequest.UserLastLogin,
