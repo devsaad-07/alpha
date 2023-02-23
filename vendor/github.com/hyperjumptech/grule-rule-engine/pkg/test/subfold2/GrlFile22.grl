@@ -1,7 +1,0 @@
-rule GrlFile22 "This is dummy rule" {
-    when
-        true
-    then
-        Log("Nice");
-        Complete();
-}
