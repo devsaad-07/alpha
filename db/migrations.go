@@ -16,12 +16,12 @@ var DatabaseSchemaMigrations = []*gormigrate.Migration{
 		},
 	},
 	{
-		ID: "2",
+		ID: "3",
 		Migrate: func(tx *gorm.DB) error {
-			return tx.AutoMigrate(&UserMetrics{})
+			return tx.AutoMigrate(&UserConsolidatedMetrics{})
 		},
 		Rollback: func(tx *gorm.DB) error {
-			return tx.Migrator().DropTable(&UserMetrics{})
+			return tx.Migrator().DropTable(&UserConsolidatedMetrics{})
 		},
 	},
 }

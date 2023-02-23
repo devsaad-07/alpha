@@ -17,10 +17,9 @@ var (
 func init() {
 	var err error
 	singleton.Do(func() {
-		dsn := fmt.Sprintf("host=localhost user=postgres password=postgres dbname=cs_india port=5432 sslmode=disable")
+		dsn := fmt.Sprintf("host=127.0.0.1 user=postgres password=postgres dbname=cs_india port=5432 sslmode=disable")
 		PostgresDB, err = gorm.Open(postgres.New(postgres.Config{
-			DriverName: "nrpgx",
-			DSN:        dsn,
+			DSN: dsn,
 		}), &gorm.Config{
 			Logger: logger.Default.LogMode(logger.Silent),
 		})

@@ -26,7 +26,7 @@ func (uoc *FeeContext) RuleOutput() RuleOutput {
 
 // User data attributes
 type FeeInput struct {
-	UserMetrics           feediscount.UserMetrics
+	UserMetrics           feediscount.UserConsolidatedMetrics
 	AssetType             string    `json:"assetType"`
 	AssetPair             string    `json:"assetPair"`
 	OrderSource           string    `json:"orderSource"` // client calling this ex: CSK, CS Pro
@@ -67,7 +67,7 @@ func NewFeeService(ruleEngineSvc *RuleEngineSvc) FeeService {
 }
 
 type FeeRequest struct {
-	UserMetrics           feediscount.UserMetrics
+	UserMetrics           feediscount.UserConsolidatedMetrics
 	AssetType             string    `json:"assetType"`
 	AssetPair             string    `json:"assetPair"`
 	OrderSource           string    `json:"orderSource"` // client calling this ex: CSK, CS Pro

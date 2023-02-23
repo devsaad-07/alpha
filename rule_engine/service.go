@@ -1,6 +1,7 @@
 package rule_engine
 
 import (
+	"alpha/db"
 	"encoding/json"
 	"github.com/hyperjumptech/grule-rule-engine/ast"
 	"github.com/hyperjumptech/grule-rule-engine/builder"
@@ -47,12 +48,33 @@ func AddNewRuleWithRuleType(rule interface{}, ruleType string) (err error) {
 	underlying := pkg.NewBytesResource(ruleBytes)
 	gruleJson := pkg.NewJSONResourceFromResource(underlying)
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, []pkg.Resource{gruleJson})
-	// TODO: save rule in DB when no error
+	if err != nil {
+		return
+	}
+	dbRule := db.Rules{
+		Type:     ruleType,
+		Rule:     string(ruleBytes),
+		IsActive: true,
+	}
+	err = db.SaveRule(dbRule)
 	return
 }
 
 func InjectRulesInEngine(ruleType string) (err error) {
-	// TODO: get rules from DB
+	rules := db.GetAllRules(ruleType)
+	grulJSONArray := []pkg.Resource{}
+
+	for _, item := range rules {
+		var ruleBytes []byte
+		ruleBytes, err = json.Marshal(item.Rule)
+		if err != nil {
+			return
+		}
+		underlying := pkg.NewBytesResource(ruleBytes)
+		gruleJson := pkg.NewJSONResourceFromResource(underlying)
+		grulJSONArray = append(grulJSONArray, gruleJson)
+	}
+	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray)
 	return
 }
 

@@ -13,29 +13,27 @@ type Rules struct {
 	IsActive bool   `gorm:"column:is_active"`
 }
 
-type UserMetrics struct {
+type UserConsolidatedMetrics struct {
 	gorm.Model
-	user_id                     int
-	user_custody_wallet_id      int
-	user_uuid                   string
-	total_trade_count           int
-	total_buy_count             int
-	total_sell_count            int
-	total_trade_gmv             sql.NullFloat64
-	total_buy_gmv               sql.NullFloat64
-	total_sell_gmv              sql.NullFloat64
-	first_trade_date            string
-	last_trade_date             string
-	total_inr_deposit_count     sql.NullInt64
-	total_inr_deposit_amount    sql.NullFloat64
-	total_inr_withdrawal_count  sql.NullInt64
-	total_inr_withdrawal_amount sql.NullFloat64
-	created_at                  string
-	updated_at                  string
+	UserId                   int             `gorm:"column:user_id"`
+	UserCustodyWalletId      int             `gorm:"column:user_custody_wallet_id"`
+	UserUuid                 string          `gorm:"column:user_uuid"`
+	TotalTradeCount          int             `gorm:"column:total_trade_count"`
+	TotalBuyCount            int             `gorm:"column:total_buy_count"`
+	TotalSellCount           int             `gorm:"column:total_sell_count"`
+	TotalTradeGmv            sql.NullFloat64 `gorm:"column:total_trade_gmv"`
+	TotalBuyGmv              sql.NullFloat64 `gorm:"column:total_buy_gmv"`
+	TotalSellGmv             sql.NullFloat64 `gorm:"column:total_sell_gmv"`
+	FirstTradeDate           string          `gorm:"column:first_trade_date"`
+	LastTradeDate            string          `gorm:"column:last_trade_date"`
+	TotalInrDepositCount     sql.NullInt64   `gorm:"column:total_inr_deposit_count"`
+	TotalInrDepositAmount    sql.NullFloat64 `gorm:"column:total_inr_deposit_amount"`
+	TotalInrWithdrawalCount  sql.NullInt64   `gorm:"column:total_inr_withdrawal_count"`
+	TotalInrWithdrawalAmount sql.NullFloat64 `gorm:"column:total_inr_withdrawal_amount"`
 }
 
-func GetUser(userId int64) UserMetrics {
-	var resp UserMetrics
+func GetUser(userId int64) UserConsolidatedMetrics {
+	var resp UserConsolidatedMetrics
 
 	db := GetDb()
 	tx := db.Where("user_id = ?", userId).First(&resp)
@@ -43,4 +41,19 @@ func GetUser(userId int64) UserMetrics {
 		return resp
 	}
 	return resp
+}
+
+func GetAllRules(ruleType string) (rule []Rules) {
+	db := GetDb()
+	tx := db.Where("type = ?", ruleType).Find(&Rules{})
+	if tx.Error != nil {
+		return
+	}
+	return rule
+}
+
+func SaveRule(rule Rules) (err error) {
+	db := GetDb()
+	tx := db.Create(&rule)
+	return tx.Error
 }
