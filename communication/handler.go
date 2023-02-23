@@ -7,8 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type alpha struct {
+type Alpha struct {
 	rule_engine *rule_engine.RuleEngineSvc
+}
+
+var alpha Alpha
+
+func init() {
+	alpha = Alpha{
+		rule_engine: rule_engine.NewRuleEngineSvc(),
+	}
 }
 
 func ping(c *gin.Context) {
@@ -18,7 +26,7 @@ func ping(c *gin.Context) {
 }
 
 func HandleFee(c *gin.Context) {
-	ruleEngineSvc := rule_engine.NewRuleEngineSvc()
+	ruleEngineSvc := alpha.rule_engine
 	feeService := rule_engine.NewFeeService(ruleEngineSvc)
 
 	var feeCard rule_engine.FeeRequest
