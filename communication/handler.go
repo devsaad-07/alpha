@@ -1,9 +1,9 @@
 package communication
 
 import (
+	feeDiscount "alpha/db"
 	"alpha/rule_engine"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -38,9 +38,7 @@ func HandleFee(c *gin.Context) {
 			"error": err.Error(),
 		})
 	}
-
-	kb := rule_engine.GetKnowledgeBase()
-	logrus.Infof("kb: ,%v", kb)
+	feeCard.UserMetrics = feeDiscount.GetUser(feeCard.UserId)
 	feeCardResponse := feeService.GetFeeForUser(feeCard)
 	c.JSON(http.StatusOK, gin.H{
 		"payload": feeCardResponse,
@@ -60,7 +58,7 @@ func HandleAddRule(c *gin.Context) {
 		})
 	}
 
-	err := rule_engine.Test(ruleRequest.Rule)
+	err := rule_engine.AddNewRuleWithRuleType(ruleRequest.Rule, ruleRequest.Type)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error": err.Error(),
