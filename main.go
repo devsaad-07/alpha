@@ -1,7 +1,9 @@
 package main
 
 import (
+	"alpha/communication"
 	"fmt"
+
 	"github.com/hyperjumptech/grule-rule-engine/logger"
 	"time"
 )
@@ -121,6 +123,11 @@ func (svc FeeServiceClient) GetFeeForUser(feeRequest FeeRequest) (feeResponse Fe
 		Type: feeCard.FeeOutput.Type,
 	}
 	return
+}
+
+func init() {
+	server := communication.GetServer()
+	server.Run()
 }
 
 func main() {
