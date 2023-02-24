@@ -3,7 +3,6 @@ package rule_engine
 import (
 	"alpha/db"
 	"encoding/json"
-	"fmt"
 	"github.com/hyperjumptech/grule-rule-engine/ast"
 	"github.com/hyperjumptech/grule-rule-engine/builder"
 	"github.com/hyperjumptech/grule-rule-engine/engine"
@@ -46,8 +45,8 @@ func AddNewRuleWithRuleType(rule interface{}, ruleType string, name string) (err
 	if err != nil {
 		return
 	}
-	rs, _ := pkg.ParseJSONRule(ruleBytes)
-	fmt.Printf("rs: %v", rs)
+	//rs, _ := pkg.ParseJSONRule(ruleBytes)
+	//fmt.Printf("rs: %v", rs)
 	underlying := pkg.NewBytesResource(ruleBytes)
 	gruleJson := pkg.NewJSONResourceFromResource(underlying)
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, []pkg.Resource{gruleJson})
@@ -69,15 +68,12 @@ func InjectRulesInEngine(ruleType string) (err error) {
 	grulJSONArray := []pkg.Resource{}
 
 	for _, item := range rules {
-		var ruleBytes []byte
-		ruleBytes, err = json.Marshal(item.Rule)
-		if err != nil {
-			return
-		}
+		ruleBytes := []byte(item.Rule)
 		underlying := pkg.NewBytesResource(ruleBytes)
 		gruleJson := pkg.NewJSONResourceFromResource(underlying)
 		grulJSONArray = append(grulJSONArray, gruleJson)
 	}
+	err = ruleBuilder.BuildRuleFromResource(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray[0])
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray)
 	return
 }
