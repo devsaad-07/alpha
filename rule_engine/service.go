@@ -73,7 +73,6 @@ func InjectRulesInEngine(ruleType string) (err error) {
 		gruleJson := pkg.NewJSONResourceFromResource(underlying)
 		grulJSONArray = append(grulJSONArray, gruleJson)
 	}
-	err = ruleBuilder.BuildRuleFromResource(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray[0])
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray)
 	return
 }
