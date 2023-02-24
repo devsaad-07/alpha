@@ -73,6 +73,15 @@ func HandleAddRule(c *gin.Context) {
 	})
 }
 
+func HandleGetAllRules(c *gin.Context) {
+	queryMap := c.Request.URL.Query()
+	ruleType := queryMap["type"][0]
+	rules := db.GetAllRules(ruleType)
+	c.JSON(http.StatusOK, gin.H{
+		"rules": rules,
+	})
+}
+
 func DeleteRule(c *gin.Context) {
 	queryMap := c.Request.URL.Query()
 	id, _ := strconv.Atoi(queryMap["id"][0])

@@ -47,7 +47,7 @@ func GetUser(userId int64) UserConsolidatedMetrics {
 
 func GetAllRules(ruleType string) (rule []Rules) {
 	db := GetDb()
-	tx := db.Where("type = ?", ruleType).Find(&Rules{})
+	tx := db.Where("type = ?", ruleType).Find(&rule)
 	if tx.Error != nil {
 		return
 	}
