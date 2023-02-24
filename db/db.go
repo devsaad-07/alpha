@@ -11,6 +11,7 @@ type Rules struct {
 	gorm.Model
 	Type     string `gorm:"column:type"`
 	Rule     string `gorm:"column:rule"`
+	Name     string `gorm:"column:name"`
 	IsActive bool   `gorm:"column:is_active"`
 }
 
@@ -60,14 +61,19 @@ func SaveRule(rule Rules) (err error) {
 }
 
 func UpdateRuleStatus(id int, status bool) {
-	var rule Rules
-
 	db := GetDb()
-	tx := db.Where("id = ?", id).Find(&rule)
+	tx := db.Model(&Rules{}).Where("id = ?", id).Update("is_active", status)
 	if tx.Error != nil {
 		return
 	}
-	rule.IsActive = status
+}
 
-	SaveRule(rule)
+func GetRuleById(id int) Rules {
+	var rule Rules
+	db := GetDb()
+	tx := db.Where("id = ?", id).Find(&rule)
+	if tx.Error != nil {
+		return rule
+	}
+	return rule
 }

@@ -51,6 +51,7 @@ func HandleFee(c *gin.Context) {
 type RuleRequest struct {
 	Type string      `json:"type"`
 	Rule interface{} `json:"rule"`
+	Name string      `json:"name"`
 }
 
 func HandleAddRule(c *gin.Context) {
@@ -61,7 +62,7 @@ func HandleAddRule(c *gin.Context) {
 		})
 	}
 
-	err := rule_engine.AddNewRuleWithRuleType(ruleRequest.Rule, ruleRequest.Type)
+	err := rule_engine.AddNewRuleWithRuleType(ruleRequest.Rule, ruleRequest.Type, ruleRequest.Name)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error": err.Error(),
@@ -75,8 +76,9 @@ func HandleAddRule(c *gin.Context) {
 func DeleteRule(c *gin.Context) {
 	queryMap := c.Request.URL.Query()
 	id, _ := strconv.Atoi(queryMap["id"][0])
+	rule := db.GetRuleById(id)
 	// Remove rule from builder
-
+	rule_engine.RemoveFromKnowledgeBase(rule.Name, rule.Type)
 	// Mark rule as in_active on builder
 	db.UpdateRuleStatus(id, false)
 }

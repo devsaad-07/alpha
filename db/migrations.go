@@ -16,7 +16,7 @@ var DatabaseSchemaMigrations = []*gormigrate.Migration{
 		},
 	},
 	{
-		ID: "3",
+		ID: "2",
 		Migrate: func(tx *gorm.DB) error {
 			return tx.AutoMigrate(&UserConsolidatedMetrics{})
 		},

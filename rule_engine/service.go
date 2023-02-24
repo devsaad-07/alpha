@@ -3,6 +3,7 @@ package rule_engine
 import (
 	"alpha/db"
 	"encoding/json"
+	"fmt"
 	"github.com/hyperjumptech/grule-rule-engine/ast"
 	"github.com/hyperjumptech/grule-rule-engine/builder"
 	"github.com/hyperjumptech/grule-rule-engine/engine"
@@ -40,11 +41,13 @@ func NewRuleEngineSvc(ruleType string) *RuleEngineSvc {
 	return &RuleEngineSvc{}
 }
 
-func AddNewRuleWithRuleType(rule interface{}, ruleType string) (err error) {
+func AddNewRuleWithRuleType(rule interface{}, ruleType string, name string) (err error) {
 	ruleBytes, err := json.Marshal(rule)
 	if err != nil {
 		return
 	}
+	rs, _ := pkg.ParseJSONRule(ruleBytes)
+	fmt.Printf("rs: %v", rs)
 	underlying := pkg.NewBytesResource(ruleBytes)
 	gruleJson := pkg.NewJSONResourceFromResource(underlying)
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, []pkg.Resource{gruleJson})
@@ -55,6 +58,7 @@ func AddNewRuleWithRuleType(rule interface{}, ruleType string) (err error) {
 		Type:     ruleType,
 		Rule:     string(ruleBytes),
 		IsActive: true,
+		Name:     name,
 	}
 	err = db.SaveRule(dbRule)
 	return
@@ -76,6 +80,10 @@ func InjectRulesInEngine(ruleType string) (err error) {
 	}
 	err = ruleBuilder.BuildRuleFromResources(ruleType, KNOWLEDGE_BASE_VERSION, grulJSONArray)
 	return
+}
+
+func RemoveFromKnowledgeBase(ruleName string, ruleType string) {
+	knowledgeLibrary.RemoveRuleEntry(ruleName, ruleType, KNOWLEDGE_BASE_VERSION)
 }
 
 func buildRuleEngine(ruleType string) (err error) {
@@ -108,11 +116,4 @@ func (svc *RuleEngineSvc) Execute(ruleType string, ruleConf RuleConfig) error {
 		return err
 	}
 	return nil
-}
-
-type GruleJSON struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	When        interface{} `json:"when"`
-	Then        interface{} `json:"then"`
 }
